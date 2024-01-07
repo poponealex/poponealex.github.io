@@ -73,11 +73,14 @@ export default function ComingSoon() {
                     <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
                         Alexandre Perlmutter
                     </h1>
-                    <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-700 sm:text-2xl">
+                    <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-800 sm:text-2xl">
                         DevSecOps &amp; Software Engineer &amp; Cybersecurity Enthusiast
                     </h2>
-                    <h3 className="mt-8 italic text-xl font-bold tracking-tight text-gray-500 sm:text-xl">
+                    <h3 className="mt-8 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
                         Currently working as a Kubernetes Consultant in Luxembourg
+                    </h3>
+                    <h3 className="mt-4 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
+                        🛶 Kayak Slalom Athlete 🛶
                     </h3>
                     
                 </div>
