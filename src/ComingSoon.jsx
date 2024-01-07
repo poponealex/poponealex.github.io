@@ -1,3 +1,5 @@
+import image from "../public/alexandre.jpg";
+
 const socials = [
     {
         name: "GitHub",
@@ -47,10 +49,7 @@ export default function ComingSoon() {
                     <p className="text-base font-semibold text-stone-400">
                         perlmutter.tech
                     </p>
-                    <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-                        Coming soon
-                    </h1>
-                    <div className="mt-10 flex items-center justify-center gap-x-10">
+                    <div className="mt-8 flex items-center justify-center gap-x-10">
                         {socials.map((item) => (
                             <a
                                 key={item.name}
@@ -66,6 +65,21 @@ export default function ComingSoon() {
                             </a>
                         ))}
                     </div>
+                    <img
+                        className="mt-16 inline-block h-32 w-32 rounded-full"
+                        src={image}
+                        alt="Kayak Slalom"
+                    />
+                    <h1 className="mt-4 text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+                        Alexandre Perlmutter
+                    </h1>
+                    <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-700 sm:text-2xl">
+                        DevSecOps &amp; Software Engineer &amp; Cybersecurity Enthusiast
+                    </h2>
+                    <h3 className="mt-8 italic text-xl font-bold tracking-tight text-gray-500 sm:text-xl">
+                        Currently working as a Kubernetes Consultant in Luxembourg
+                    </h3>
+                    
                 </div>
             </main>
         </>
