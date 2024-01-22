@@ -83,9 +83,6 @@ export default function Home() {
                     <h3 className="mt-4 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
                         🛶 Kayak Slalom Athlete 🛶
                     </h3>
-                    <br />
-                    <br />
-                    <Projects />
                 </div>
             </main>
         </>
