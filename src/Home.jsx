@@ -1,4 +1,5 @@
 import image from "../public/alexandre.jpg";
+import { default as Projects } from "./components/ProjectList.jsx";
 
 const socials = [
     {
@@ -40,7 +41,7 @@ const socials = [
     },
 ];
 
-export default function ComingSoon() {
+export default function Home() {
     
     return (
         <>
@@ -82,7 +83,9 @@ export default function ComingSoon() {
                     <h3 className="mt-4 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
                         🛶 Kayak Slalom Athlete 🛶
                     </h3>
-                    
+                    <br />
+                    <br />
+                    <Projects />
                 </div>
             </main>
         </>
