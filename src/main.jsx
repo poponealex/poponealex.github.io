@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import { default as ComingSoon } from "./ComingSoon.jsx";
+import { default as Home } from "./Home.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
-        <ComingSoon />
+        <Home />
     </React.StrictMode>
 );
