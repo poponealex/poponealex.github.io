@@ -84,7 +84,9 @@ export default function Example() {
             />
             <div>
               <p className="text-sm font-medium leading-6 text-gray-900">
-                <a onClick={() => setShow(true)}>
+                <a 
+                href="#/"
+                onClick={() => setShow(true)}>
                   {project.name}
                 </a>
               </p>
@@ -114,7 +116,7 @@ export default function Example() {
                     {({ active }) => (
                       <a
                         onClick={() => setShow(true)}
-                        // href="#"
+                        href="#/"
                         className={classNames(
                           active ? "bg-gray-50" : "",
                           "block px-3 py-1 text-sm leading-6 text-gray-900"
