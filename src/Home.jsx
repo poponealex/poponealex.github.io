@@ -74,7 +74,7 @@ export default function Home() {
             Alexandre Perlmutter
           </h1>
           <h2 className="mt-6 text-2xl font-bold tracking-tight text-gray-800 sm:text-2xl">
-            DevSecOps &amp; Software Engineer &amp; Cybersecurity Enthusiast
+           DevSecOps Engineer &amp; Software Developer &amp; Cybersecurity Enthusiast
           </h2>
           <h3 className="mt-8 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
             Currently working as a Kubernetes Consultant in Luxembourg
