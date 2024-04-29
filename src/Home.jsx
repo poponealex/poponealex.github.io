@@ -77,7 +77,7 @@ export default function Home() {
            DevSecOps Engineer &amp; Software Developer &amp; Cybersecurity Enthusiast
           </h2>
           <h3 className="mt-8 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
-            Currently working as a Kubernetes Consultant in Luxembourg
+            Currently working as a Kubernetes Engineer in Luxembourg
           </h3>
           <h3 className="mt-4 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
             🛶 Kayak Slalom Athlete 🛶
