@@ -50,6 +50,18 @@ const projects = [
     },
     stack: "Rust, React",
   },
+  {
+    name: "La Chambre À Côté",
+    kind: "Website",
+    short_description:
+      "High-end, comfortable apartments in the heart of the magnificent city of Metz!",
+    imageUrl: "/logo-lcac.png",
+    link: {
+      short: "lachambreacote.fr",
+      url: "https://www.lachambreacote.fr",
+    },
+    stack: "Wordpress",
+  },
 ];
 
 function classNames(...classes) {
