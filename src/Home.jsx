@@ -80,7 +80,7 @@ export default function Home() {
             Currently working as a Cloud & DevOps Engineer in Luxembourg
           </h3>
           <h3 className="mt-4 text-xl font-bold tracking-tight text-gray-700 sm:text-xl">
-            🛶 Kayak Slalom Athlete 🛶
+            🛶 Kayak Club de Metz President & Canoe Slalom Athlete 🛶
           </h3>
         </div>
       </main>
