@@ -47,7 +47,7 @@ export const projects: readonly Project[] = [
     stack: ['Kubernetes', 'Mesos', 'Python', 'Helm', 'CI/CD'],
   },
   {
-    title: 'An AI earth observation company',
+    title: 'A social benefits provider',
     context: 'Kubernetes → GitOps',
     period: '2025',
     summary:
