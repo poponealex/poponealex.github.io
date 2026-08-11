@@ -1,0 +1,99 @@
+---
+import Container from '../components/Container.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import TimelineRow from '../components/TimelineRow.astro';
+import Base from '../layouts/Base.astro';
+import { languages, studies } from '../data/education';
+import { roles } from '../data/experience';
+import { leadership } from '../data/leadership';
+
+const TOTAL = 4;
+---
+
+<Base
+  title="Experience"
+  description="Cloud and platform engineering by day, running organisations the rest of the time — roles, leadership, education, languages."
+>
+  <Container as="section" class="py-section">
+    <h1 class="font-display text-title" data-reveal>Experience</h1>
+    <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+    <p class="text-lead text-ink-muted mt-6 max-w-prose" data-reveal>
+      Cloud and platform engineering by day, running organisations the rest of the time.
+    </p>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Roles" index={1} total={TOTAL} id="roles" />
+    <ul class="border-line mt-2 border-t">
+      {
+        roles.map((role) => (
+          <TimelineRow
+            title={role.title}
+            meta={role.org}
+            period={role.period}
+            summary={role.summary}
+            tags={[role.location, ...role.stack]}
+          />
+        ))
+      }
+    </ul>
+    <p class="mt-6">
+      <a href="/projects" class="link-sweep text-accent font-mono text-sm">
+        Client projects &#10230;
+      </a>
+    </p>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Leadership" index={2} total={TOTAL} id="leadership" />
+    <ul class="border-line mt-2 border-t">
+      {
+        leadership.map((role) => (
+          <TimelineRow
+            title={role.title}
+            meta={role.org}
+            period={role.period}
+            summary={role.summary}
+            href={role.href}
+          />
+        ))
+      }
+    </ul>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Education" index={3} total={TOTAL} id="education" />
+    <dl class="divide-line mt-2 divide-y">
+      {
+        studies.map((study) => (
+          <div class="py-5" data-reveal>
+            <dt class="flex flex-wrap items-baseline justify-between gap-x-4">
+              <span class="font-display text-lg font-semibold tracking-tight">
+                {study.degree}
+                <span class="text-ink-faint font-sans font-normal">&middot; {study.school}</span>
+              </span>
+              <span class="text-eyebrow text-ink-faint font-mono">{study.period}</span>
+            </dt>
+            <dd class="text-ink-muted mt-2">
+              {study.note ? `${study.note} · ${study.location}` : study.location}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Languages" index={4} total={TOTAL} id="languages" />
+    <dl class="divide-line mt-2 divide-y">
+      {
+        languages.map((language) => (
+          <div class="grid gap-1 py-4 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-6" data-reveal>
+            <dt class="text-eyebrow text-ink font-mono uppercase">{language.name}</dt>
+            <dd class="text-ink-muted">{language.level}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Container>
+</Base>

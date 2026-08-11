@@ -1,0 +1,144 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ['main']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# A Pages deployment must never be cancelled mid-flight: cancelling leaves the
+# deployment for that commit in a `cancelled` state, and every later attempt at
+# the same SHA is then refused with "Deployment cancelled". Queue instead.
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Full history, not the default shallow clone: the sitemap's lastmod is the
+      # date of the last commit touching the source, and `git log -- <path>` has
+      # nothing to report when the clone is one commit deep.
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+      - name: Type check
+        run: npm run check
+      - name: Lint
+        run: npm run lint
+      - name: Check formatting
+        run: npm run format:check
+      - name: Build
+        run: npm run build
+      - name: Setup Pages
+        uses: actions/configure-pages@v6
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: './dist'
+
+  # `deploy-pages` polls the Pages API for a terminal `succeed` and gives up
+  # after 10 minutes. That 10 minutes is a hard ceiling inside the action
+  # (MAX_TIMEOUT = 600000); passing a larger `timeout` is silently clamped and
+  # only earns a warning in the log — so raising it is not an option.
+  #
+  # The Pages backend intermittently takes longer than that to report success
+  # even though the artifact does go live (see actions/deploy-pages#406). When
+  # the poll gives up it *cancels* the deployment, and a cancelled SHA re-tried
+  # immediately fast-fails with "Deployment cancelled." — which is how a single
+  # slow deploy turns into a streak of red runs.
+  #
+  # So: retry, but leave a gap. The cooldown is the load-bearing part; back-to-
+  # back attempts at the same commit just re-trip the cancelled-SHA check.
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    # 3 × 10 min of polling + 2 × 2 min of cooldown, plus headroom.
+    timeout-minutes: 40
+    environment:
+      name: github-pages
+      url: ${{ steps.attempt_1.outputs.page_url || steps.attempt_2.outputs.page_url || steps.attempt_3.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: attempt_1
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Cool down after attempt 1
+        if: steps.attempt_1.outcome == 'failure'
+        run: sleep 120
+
+      - name: Deploy to GitHub Pages (attempt 2)
+        id: attempt_2
+        if: steps.attempt_1.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+        continue-on-error: true
+
+      - name: Cool down after attempt 2
+        if: steps.attempt_2.outcome == 'failure'
+        run: sleep 120
+
+      # Last attempt owns the job's outcome: no `continue-on-error`, so a
+      # failure here is a genuinely failed deploy rather than a slow one.
+      - name: Deploy to GitHub Pages (attempt 3)
+        id: attempt_3
+        if: steps.attempt_2.outcome == 'failure'
+        uses: actions/deploy-pages@v5
+
+      # Tell the IndexNow engines (Bing, Yandex, Seznam, Naver — not Google, which
+      # does not take part) that the site changed, instead of waiting for their next
+      # crawl. Only reached once a deploy has succeeded, so every URL submitted is
+      # already live; submitting a URL that 404s is how a host gets its key
+      # distrusted. The whole sitemap goes every time, which is fine at four URLs —
+      # a larger site should submit only what changed.
+      #
+      # Never allowed to fail the run: the deploy has already succeeded by this
+      # point, and a red run over a best-effort ping would invite a re-run of an
+      # already-deployed SHA, which is exactly what the retry comments above warn
+      # about.
+      - name: Checkout for the IndexNow key
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 1
+      - name: Notify IndexNow
+        continue-on-error: true
+        run: |
+          set -uo pipefail
+          key=$(jq -r .key src/data/indexnow.json)
+          # Unique query per run: pages.github.io sits behind a 10-minute CDN cache,
+          # and a cached sitemap would describe the deploy before this one.
+          urls=$(curl -sS --fail --max-time 30 \
+            "https://www.perlmutter.tech/sitemap-0.xml?deploy=${{ github.sha }}" \
+            | grep -o '<loc>[^<]*</loc>' | sed -e 's|<loc>||g' -e 's|</loc>||g' \
+            | jq -R . | jq -sc .)
+          count=$(echo "$urls" | jq 'length')
+          if [ "$count" -eq 0 ]; then
+            echo "Sitemap yielded no URLs — skipping rather than submitting an empty list."
+            exit 0
+          fi
+          echo "Submitting $count URL(s)."
+          payload=$(jq -nc \
+            --arg host "www.perlmutter.tech" \
+            --arg key "$key" \
+            --arg keyLocation "https://www.perlmutter.tech/$key.txt" \
+            --argjson urlList "$urls" \
+            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}')
+          status=$(curl -sS -o /tmp/indexnow.body -w '%{http_code}' --max-time 30 \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d "$payload")
+          echo "IndexNow returned HTTP $status"
+          cat /tmp/indexnow.body || true

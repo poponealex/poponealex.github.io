@@ -1,0 +1,228 @@
+---
+import { Image } from 'astro:assets';
+import podium from '../assets/portrait-podium.jpg';
+import portrait from '../assets/portrait.jpg';
+import CertCard from '../components/CertCard.astro';
+import Container from '../components/Container.astro';
+import Section from '../components/Section.astro';
+import TimelineRow from '../components/TimelineRow.astro';
+import Base from '../layouts/Base.astro';
+import { certifications, credlyProfile } from '../data/certifications';
+import { roles } from '../data/experience';
+import { leadership } from '../data/leadership';
+import { site, socials } from '../data/site';
+import { skills } from '../data/skills';
+
+const heroMeta = [site.location, 'AWS DevOps Pro', 'CKA', 'Terraform Pro'];
+const TOTAL = 5;
+
+/** The home page shows the current three; /experience carries the full list. */
+const featuredLeadership = leadership.slice(0, 3);
+---
+
+<Base isHome>
+  <Container as="section" class="py-section">
+    <div class="grid gap-10 sm:grid-cols-[minmax(0,auto)_minmax(0,1fr)] sm:items-start sm:gap-12">
+      <Image
+        src={portrait}
+        alt={`${site.name} speaking at a press conference for the 2026 French canoe-kayak championships in Metz`}
+        width={260}
+        height={260}
+        densities={[1, 2]}
+        loading="eager"
+        fetchpriority="high"
+        class="ring-line w-40 rounded-xl ring-1 sm:w-[260px]"
+      />
+
+      <div data-reveal>
+        {/* Inside the h1 — the strongest on-page signal should carry the key query. */}
+        <h1 class="font-display text-display">
+          <span class="text-eyebrow text-ink-muted mb-4 block font-mono font-medium uppercase">
+            <span class="text-accent" aria-hidden="true">&#9656;</span>{' '}
+            {site.name}
+          </span>{' '}
+          Cloud &amp; Platform<br />Engineer.
+        </h1>
+        <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+        <p class="text-lead text-ink-muted mt-6 max-w-prose">{site.tagline}</p>
+
+        <ul class="mt-8 flex flex-wrap gap-x-3 gap-y-2">
+          {
+            heroMeta.map((item) => (
+              <li class="text-eyebrow text-ink-faint font-mono uppercase">
+                <span class="text-accent" aria-hidden="true">
+                  &#9656;
+                </span>{' '}
+                {item}
+              </li>
+            ))
+          }
+        </ul>
+
+        <nav aria-label="Profiles" class="mt-8 flex flex-wrap gap-x-5 gap-y-2">
+          {
+            socials.map((social) => (
+              <a
+                href={social.href}
+                class="link-sweep text-ink-muted hover:text-accent font-mono text-sm transition-colors"
+                rel={social.href.startsWith('mailto:') ? undefined : 'me noopener'}
+              >
+                {social.name}
+              </a>
+            ))
+          }
+        </nav>
+      </div>
+    </div>
+  </Container>
+
+  <Section title="What I do" index={1} total={TOTAL} id="what-i-do">
+    <dl class="divide-line mt-8 divide-y">
+      {
+        skills.map((group) => (
+          <div class="grid gap-1 py-5 sm:grid-cols-[13rem_minmax(0,1fr)] sm:gap-6" data-reveal>
+            <dt class="text-eyebrow text-ink font-mono uppercase">{group.label}</dt>
+            <dd class="text-ink-muted">{group.items.join(' · ')}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </Section>
+
+  <Section title="Where I work" index={2} total={TOTAL} id="experience">
+    <ul class="border-line mt-2 border-t">
+      {
+        roles.map((role) => (
+          <TimelineRow
+            title={role.title}
+            meta={role.org}
+            period={role.period}
+            summary={role.summary}
+            tags={[role.location, ...role.stack]}
+          />
+        ))
+      }
+    </ul>
+    <p class="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+      <a href="/projects" class="link-sweep text-accent font-mono text-sm">
+        Client projects &#10230;
+      </a>
+      <a href="/experience" class="link-sweep text-accent font-mono text-sm">
+        Full experience &#10230;
+      </a>
+    </p>
+  </Section>
+
+  <Section title="Certifications" index={3} total={TOTAL} id="certifications">
+    <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {certifications.map((certification) => <CertCard certification={certification} />)}
+    </ul>
+    <p class="mt-6">
+      <a
+        href={credlyProfile}
+        class="link-sweep text-accent font-mono text-sm"
+        rel="me noopener"
+        target="_blank"
+      >
+        Verify all badges on Credly &#10230;
+      </a>
+    </p>
+  </Section>
+
+  <Section title="Beyond the keyboard" index={4} total={TOTAL} id="beyond">
+    <div class="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,auto)] lg:gap-12">
+      <div>
+        <p class="text-lead max-w-prose" data-reveal>
+          I run the number-one kayak club in France. The organisations I have built matter to me as
+          much as the systems.
+        </p>
+
+        <dl class="divide-line mt-8 divide-y">
+          {
+            featuredLeadership.map((role) => (
+              <div class="py-5" data-reveal>
+                <dt class="flex flex-wrap items-baseline justify-between gap-x-4">
+                  <span class="font-display text-lg font-semibold tracking-tight">
+                    {role.title}
+                    <span class="text-ink-faint font-sans font-normal">&middot; {role.org}</span>
+                  </span>
+                  <span class="text-eyebrow text-ink-faint font-mono">{role.period}</span>
+                </dt>
+                <dd class="text-ink-muted mt-2 max-w-prose">
+                  {role.summary.map((paragraph, index) => (
+                    <p class:list={[index > 0 && 'mt-3']}>
+                      {paragraph}
+                      {/* The link trails the final paragraph rather than sitting on its own line. */}
+                      {index === role.summary.length - 1 && role.href && (
+                        <>
+                          {' '}
+                          <a
+                            href={role.href}
+                            class="link-sweep text-accent font-mono text-sm whitespace-nowrap"
+                            rel="noopener"
+                            target="_blank"
+                          >
+                            {new URL(role.href).hostname.replace('www.', '')} &#10230;
+                          </a>
+                        </>
+                      )}
+                    </p>
+                  ))}
+                </dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+
+      <figure class="lg:max-w-[300px]" data-reveal>
+        <Image
+          src={podium}
+          alt={`${site.name} on the podium with the trophy awarded for organising the 2026 French Canoe-Kayak Championships in Metz`}
+          width={300}
+          height={400}
+          densities={[1, 2]}
+          loading="lazy"
+          class="ring-line w-full rounded-xl ring-1"
+        />
+        <figcaption class="text-eyebrow text-ink-faint mt-3 font-mono uppercase">
+          Organiser’s trophy — French Championships 2026
+        </figcaption>
+      </figure>
+    </div>
+  </Section>
+
+  <Section title="Get in touch" index={5} total={TOTAL} id="contact">
+    <div class="mt-8 flex flex-col gap-8 sm:flex-row sm:items-end sm:justify-between" data-reveal>
+      <div>
+        <p class="text-ink-muted max-w-prose">
+          Happy to talk Kubernetes, Cloud, Terraform, Clean Architecture or anything
+          platform-shaped.
+        </p>
+        <a
+          href={`mailto:${site.email}`}
+          class="link-sweep font-display text-title hover:text-accent mt-4 inline-block transition-colors"
+        >
+          {site.email}
+        </a>
+      </div>
+
+      <nav aria-label="Profiles" class="flex flex-wrap gap-x-5 gap-y-2">
+        {
+          socials
+            .filter((social) => !social.href.startsWith('mailto:'))
+            .map((social) => (
+              <a
+                href={social.href}
+                class="link-sweep text-ink-muted hover:text-accent font-mono text-sm transition-colors"
+                rel="me noopener"
+                target="_blank"
+              >
+                {social.name}
+              </a>
+            ))
+        }
+      </nav>
+    </div>
+  </Section>
+</Base>

@@ -1,0 +1,67 @@
+---
+/**
+ * One hairline-separated editorial row, shared by the experience and project
+ * lists. Takes primitives rather than a domain record so both data shapes can
+ * use it without one leaking into the other.
+ *
+ * Renders as a link only when `href` is set, so nothing suggests an affordance
+ * that does not exist yet.
+ */
+interface Props {
+  title: string;
+  /** Qualifier shown next to the title — the employer, or the shape of the work. */
+  meta?: string;
+  period: string;
+  /** A single paragraph, or several to be rendered as separate ones. */
+  summary: string | readonly string[];
+  /** Omitted by rows that carry no stack, e.g. leadership roles. */
+  tags?: readonly string[];
+  href?: string;
+}
+
+const { title, meta, period, summary, tags, href }: Props = Astro.props;
+
+const paragraphs = typeof summary === 'string' ? [summary] : summary;
+const Tag = href ? 'a' : 'div';
+const isExternal = href?.startsWith('http') ?? false;
+---
+
+<li class="border-line border-b" data-reveal>
+  <Tag
+    href={href}
+    target={isExternal ? '_blank' : undefined}
+    rel={isExternal ? 'noopener' : undefined}
+    class:list={['block py-6', href && 'hover:text-accent focus-visible:text-accent']}
+  >
+    <div class="flex items-baseline justify-between gap-4">
+      <h3 class="font-display text-xl font-semibold tracking-tight transition-colors">
+        {title}
+        {meta && <span class="text-ink-faint font-sans font-normal">&middot; {meta}</span>}
+      </h3>
+      <span class="text-eyebrow text-ink-faint shrink-0 font-mono">
+        {period}
+        {
+          href && (
+            <span class="text-accent ml-1.5" aria-hidden="true">
+              &#10230;
+            </span>
+          )
+        }
+      </span>
+    </div>
+
+    {
+      paragraphs.map((paragraph, index) => (
+        <p class:list={['text-ink-muted max-w-prose', index === 0 ? 'mt-2' : 'mt-3']}>
+          {paragraph}
+        </p>
+      ))
+    }
+
+    {
+      tags && tags.length > 0 && (
+        <p class="text-eyebrow text-ink-faint mt-3 font-mono uppercase">{tags.join(' · ')}</p>
+      )
+    }
+  </Tag>
+</li>

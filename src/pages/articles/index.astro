@@ -1,0 +1,53 @@
+---
+import Container from '../../components/Container.astro';
+import TimelineRow from '../../components/TimelineRow.astro';
+import Base from '../../layouts/Base.astro';
+import { formatArticleDate, getPublishedArticles } from '../../lib/articles';
+
+const articles = await getPublishedArticles();
+---
+
+<Base
+  title="Writing"
+  description="Field notes on Kubernetes, infrastructure-as-code and DevSecOps, from production migrations for enterprise clients."
+  schemaType="CollectionPage"
+>
+  <Container as="section" class="py-section">
+    <h1 class="font-display text-title" data-reveal>Writing</h1>
+    <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+
+    {
+      articles.length > 0 ? (
+        <ul class="border-line mt-12 border-t">
+          {articles.map((article) => (
+            <TimelineRow
+              title={article.data.title}
+              period={formatArticleDate(article.data.pubDate)}
+              summary={article.data.description}
+              tags={article.data.tags}
+              href={`/articles/${article.id}`}
+            />
+          ))}
+        </ul>
+      ) : (
+        <p class="text-ink-muted border-line mt-12 border-t pt-6" data-reveal>
+          Nothing published yet. New posts land here and in the{' '}
+          <a href="/rss.xml" class="link-sweep text-accent font-mono text-sm">
+            RSS feed
+          </a>
+          {'.'}
+        </p>
+      )
+    }
+
+    {
+      articles.length > 0 && (
+        <p class="mt-6">
+          <a href="/rss.xml" class="link-sweep text-accent font-mono text-sm">
+            RSS feed &#10230;
+          </a>
+        </p>
+      )
+    }
+  </Container>
+</Base>

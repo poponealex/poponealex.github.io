@@ -1,0 +1,27 @@
+---
+/**
+ * Mono eyebrow with an optional `01/05` counter, over a hairline rule.
+ * The counter is the recurring editorial motif that ties the sections together.
+ */
+interface Props {
+  title: string;
+  index?: number;
+  total?: number;
+  id?: string;
+}
+
+const { title, index, total, id } = Astro.props;
+const counter =
+  index !== undefined && total !== undefined
+    ? `${String(index).padStart(2, '0')}/${String(total).padStart(2, '0')}`
+    : undefined;
+---
+
+<div
+  class="border-line flex items-baseline justify-between gap-4 border-b pb-3"
+  id={id}
+  data-reveal
+>
+  <h2 class="text-eyebrow text-ink-muted font-mono font-medium uppercase">{title}</h2>
+  {counter && <span class="text-eyebrow text-ink-faint font-mono">{counter}</span>}
+</div>

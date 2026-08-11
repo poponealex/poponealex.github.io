@@ -1,0 +1,19 @@
+---
+import Container from './Container.astro';
+import SectionHeader from './SectionHeader.astro';
+
+/** Container + SectionHeader pairing used by every home-page section. */
+interface Props {
+  title: string;
+  index: number;
+  total: number;
+  id?: string;
+}
+
+const { title, index, total, id }: Props = Astro.props;
+---
+
+<Container as="section" class="pb-section" id={id}>
+  <SectionHeader title={title} index={index} total={total} />
+  <slot />
+</Container>

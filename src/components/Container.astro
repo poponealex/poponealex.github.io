@@ -1,0 +1,14 @@
+---
+/** Centres content in the 1120px shell with the site's responsive gutters. */
+interface Props {
+  as?: 'div' | 'section' | 'header' | 'footer' | 'main' | 'nav' | 'article';
+  class?: string;
+  id?: string;
+}
+
+const { as: Tag = 'div', class: className = '', id }: Props = Astro.props;
+---
+
+<Tag id={id} class:list={['max-w-shell mx-auto w-full px-6 sm:px-8 lg:px-10', className]}>
+  <slot />
+</Tag>

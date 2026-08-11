@@ -1,0 +1,66 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import Container from '../../components/Container.astro';
+import Base from '../../layouts/Base.astro';
+import { formatArticleDate, getPublishedArticles } from '../../lib/articles';
+
+/**
+ * One page per article. Drafts are excluded in production by
+ * `getPublishedArticles`, so a draft never gets a public URL.
+ */
+export async function getStaticPaths() {
+  const articles = await getPublishedArticles();
+
+  return articles.map((article) => ({
+    params: { slug: article.id },
+    props: { article },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article }: Props = Astro.props;
+const { Content } = await render(article);
+const { title, description, pubDate, updatedDate, tags } = article.data;
+---
+
+<Base
+  title={title}
+  description={description}
+  article={{ title, description, pubDate, updatedDate, tags }}
+>
+  <Container as="article" class="py-section">
+    <header data-reveal>
+      <p class="text-eyebrow text-ink-faint font-mono uppercase">
+        <a href="/articles" class="link-sweep hover:text-accent transition-colors">Writing</a>
+      </p>
+      <h1 class="font-display text-title mt-4 max-w-prose">{title}</h1>
+      <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+
+      <p class="text-eyebrow text-ink-faint mt-6 font-mono uppercase">
+        <time datetime={pubDate.toISOString()}>{formatArticleDate(pubDate)}</time>
+        {
+          updatedDate && (
+            <>
+              {' · updated '}
+              <time datetime={updatedDate.toISOString()}>{formatArticleDate(updatedDate)}</time>
+            </>
+          )
+        }
+        {tags.length > 0 && ` · ${tags.join(' · ')}`}
+      </p>
+    </header>
+
+    <div class="prose mt-12" data-reveal>
+      <Content />
+    </div>
+
+    <p class="border-line mt-16 border-t pt-6">
+      <a href="/articles" class="link-sweep text-accent font-mono text-sm">
+        &#10229; All writing
+      </a>
+    </p>
+  </Container>
+</Base>

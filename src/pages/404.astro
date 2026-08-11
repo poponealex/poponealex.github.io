@@ -1,0 +1,34 @@
+---
+import Container from '../components/Container.astro';
+import Base from '../layouts/Base.astro';
+import { nav } from '../data/site';
+
+/**
+ * Served by the host for any unknown path. Its job is to be a route back into the
+ * site rather than a dead end, so it lists the main pages instead of apologising.
+ */
+const routes = [...nav, { label: 'Home', href: '/' }];
+---
+
+<Base title="Page not found" description="That page does not exist." noindex>
+  <Container as="section" class="py-section">
+    <p class="text-eyebrow text-ink-faint font-mono uppercase">
+      <span class="text-accent" aria-hidden="true">&#9656;</span> 404
+    </p>
+    <h1 class="font-display text-title mt-4">Nothing here.</h1>
+    <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+    <p class="text-lead text-ink-muted mt-6 max-w-prose">
+      This page does not exist, or it moved and left no forwarding address.
+    </p>
+
+    <nav aria-label="Main pages" class="mt-8 flex flex-wrap gap-x-6 gap-y-2">
+      {
+        routes.map((route) => (
+          <a href={route.href} class="link-sweep text-accent font-mono text-sm">
+            {route.label} &#10230;
+          </a>
+        ))
+      }
+    </nav>
+  </Container>
+</Base>

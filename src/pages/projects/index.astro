@@ -1,0 +1,64 @@
+---
+import Container from '../../components/Container.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import TimelineRow from '../../components/TimelineRow.astro';
+import Base from '../../layouts/Base.astro';
+import { projects, sideProjects } from '../../data/projects';
+
+/** Per-project detail pages land in phase 2; these two lists are the full set. */
+const TOTAL = 2;
+---
+
+<Base
+  title="Projects"
+  description="Client work: on-prem to AWS, Azure and Kubernetes migrations, landing zones and disaster recovery, plus open-source tools."
+>
+  <Container as="section" class="py-section">
+    <h1 class="font-display text-title" data-reveal>Projects</h1>
+    <div class="bg-accent mt-6 h-px w-16" aria-hidden="true"></div>
+    <p class="text-lead text-ink-muted mt-6 max-w-prose" data-reveal>
+      Engagements delivered for clients, plus the tools and platforms built alongside them.
+    </p>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Client work" index={1} total={TOTAL} id="client-work" />
+    <ul class="border-line mt-2 border-t">
+      {
+        projects.map((project) => (
+          <TimelineRow
+            title={project.title}
+            meta={project.context}
+            period={project.period}
+            summary={project.summary}
+            tags={project.stack}
+            href={project.href}
+          />
+        ))
+      }
+    </ul>
+    <p class="mt-6">
+      <a href="/experience" class="link-sweep text-accent font-mono text-sm">
+        Full experience &#10230;
+      </a>
+    </p>
+  </Container>
+
+  <Container as="section" class="pb-section">
+    <SectionHeader title="Side projects" index={2} total={TOTAL} id="side-projects" />
+    <ul class="border-line mt-2 border-t">
+      {
+        sideProjects.map((project) => (
+          <TimelineRow
+            title={project.title}
+            meta={project.context}
+            period={project.period}
+            summary={project.summary}
+            tags={project.stack}
+            href={project.href}
+          />
+        ))
+      }
+    </ul>
+  </Container>
+</Base>
