@@ -17,7 +17,7 @@ export const site = {
   name: 'Alexandre Perlmutter',
   initials: 'AP',
   role: 'Cloud & Platform Engineer',
-  tagline: 'Kubernetes, infrastructure-as-code and DevSecOps for enterprise clients.',
+  tagline: 'Kubernetes, IaC and DevSecOps for enterprise clients.',
   // Kept under ~125 characters: Google truncates search snippets around 155, and
   // social previews clip closer to 125. One string feeds both.
   description:

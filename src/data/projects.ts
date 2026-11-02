@@ -23,6 +23,30 @@ export interface Project {
 
 export const projects: readonly Project[] = [
   {
+    title: 'An AI-assisted SRE platform',
+    context: 'MCP gateway on AKS',
+    period: '2026',
+    summary:
+      'Built a platform that lets engineers safely debug customer environments from their AI chat: an MCP gateway on private AKS reaching customer VMs through outbound-only tunnels, with per-request authorisation, a read-only command allowlist and short-lived SSH certificates.',
+    stack: ['Python', 'Go', 'AKS', 'ArgoCD', 'Bicep', 'MCP'],
+  },
+  {
+    title: 'An automotive group',
+    context: 'central AKS platform',
+    period: '2026',
+    summary:
+      "Designed and deployed the client's central AKS application platform — separate non-production and production clusters built entirely through IaC and GitOps, with an Istio service mesh and Kyverno policies — then migrated all of the client's applications onto it.",
+    stack: ['AKS', 'Kubernetes', 'GitOps', 'Istio', 'Kyverno'],
+  },
+  {
+    title: 'An automotive supplier',
+    context: 'on-prem Atlassian → EC2 → EKS',
+    period: '2026',
+    summary:
+      'Migrated the on-prem Jira and Confluence instances to AWS, first onto EC2 and then onto Amazon EKS.',
+    stack: ['AWS', 'EC2', 'EKS', 'Kubernetes', 'Jira', 'Confluence'],
+  },
+  {
     title: 'An HR services provider',
     context: 'Redmine → Azure DevOps',
     period: '2026',
